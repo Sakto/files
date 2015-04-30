@@ -1,0 +1,266 @@
+snippet <?
+	<?php
+
+	${0}
+snippet <?ns
+	<?php namespace ${1:App\Http};
+	
+	${0}
+snippet ec
+	echo ${0};
+snippet <?e
+	<?php echo ${0} ?>
+snippet r
+	return $${0};
+# this one is for php5.4
+snippet <?=
+	<?=${0}?>
+snippet ?=
+	<?= ${0} ?>
+snippet ?
+	<?php ${0} ?>
+snippet ?f
+	<?php foreach ($${1:vars} as $${2:$var}): ?>
+		${0}
+	<?php endforeach ?>
+snippet ?i
+	<?php if ($${1:var}): ?>
+		${0}
+	<?php endif ?>
+snippet ns
+	namespace ${1:App\Http};
+	${0}
+snippet use
+	use ${1:Foo\Bar\Baz};
+	${0}
+snippet	c
+	class ${1:`vim_snippets#Filename()`} extends ${2:Class} {
+		
+		${0}
+		
+	}
+snippet i
+	interface ${1:`vim_snippets#Filename()`} {
+		${0}
+	}
+snippet t.
+	$this->
+snippet f
+	function ${1}(${3})
+	{
+		${0}
+	}
+# method
+snippet m
+	${1:public} function ${2:foo}()
+	{
+		${0}
+	}
+# Tertiary conditional
+snippet =?:
+	$${1:foo} = ${2:true} ? ${3:a} : ${0};
+snippet ?:
+	${1:true} ? ${2:a} : ${0};
+
+snippet C
+	$_COOKIE['${1:variable}']
+snippet E
+	$_ENV['${1:variable}']
+snippet F
+	$_FILES['${1:variable}']
+snippet G
+	$_GET['${1:variable}']
+snippet P
+	$_POST['${1:variable}']
+snippet R
+	$_REQUEST['${1:variable}']
+snippet S
+	$_SERVER['${1:variable}']
+snippet SS
+	$_SESSION['${1:variable}']
+
+# Start Docblock
+snippet /*
+	/**
+	 * ${0}
+	 */
+snippet nc
+	namespace ${1:`substitute(substitute(expand("%:h"), '\v^\w+\/(\u)', '\1', ''), '\/', '\\', 'g')`};
+
+	${2:abstract }class ${3:`vim_snippets#Filename()`} {
+		
+		${4:public} static function ${5:name}()
+		{
+			${0}
+		}
+		
+	}
+snippet wh
+	while (${1:/* condition */}) {
+		${0}
+	}
+# do ... while
+snippet do
+	do {
+		${0}
+	} while (${1:/* condition */});
+snippet if
+	if (${1:/* condition */})
+	{
+		${0}
+	}
+snippet ifn
+	if (!${1:/* condition */})
+	{
+		${2}
+	}
+snippet ifil
+	<?php if (${1:/* condition */}): ?>
+		${0}
+	<?php endif; ?>
+snippet ife
+	if (${1:/* condition */})
+	{
+		${2}
+	}
+	else
+	{
+		${3}
+	}
+	${0}
+snippet ifeil
+	<?php if (${1:/* condition */}): ?>
+		${2:<!-- html... -->}
+	<?php else: ?>
+		${3:<!-- html... -->}
+	<?php endif; ?>
+	${0}
+snippet el
+	else
+	{
+		${0}
+	}
+snippet eif
+	elseif (${1:/* condition */}) {
+		${0}
+	}
+snippet switch
+	switch ($${1:variable}) {
+		case '${2:value}':
+			${3}
+			break;
+		${0}
+		default:
+			${4}
+			break;
+	}
+snippet case
+	case '${1:value}':
+		${2}
+		break;
+snippet for
+	for ($${2:i} = 0; $$2 < ${1:count}; $$2${3:++})
+	{
+		${0}
+	}
+snippet foreach
+	foreach ($${1:variable} as $${2:value})
+	{
+		${0}
+	}
+snippet foreachil
+	<?php foreach ($${1:variable} as $${2:value}): ?>
+		${0:<!-- html... -->}
+	<?php endforeach; ?>
+snippet foreachk
+	foreach ($${1:variable} as $${2:key} => $${3:value}) {
+		${0}
+	}
+snippet foreachkil
+	<?php foreach ($${1:variable} as $${2:key} => $${3:value}): ?>
+		${0:<!-- html... -->}
+	<?php endforeach; ?>
+# $... = array (...)
+snippet array
+	$${1:arrayName} = array('${2}' => ${3});
+snippet try
+	try
+	{
+		${0}
+	}
+	catch (${1:Exception} $e)
+	{
+		
+	}
+# lambda with closure
+snippet lambda
+	${1:static }function (${2:args}) use (${3:&$x, $y /*put vars in scope (closure) */}) {
+		${0}
+	};
+# pre_dump();
+snippet pd
+	echo '<pre>'; var_dump(${0}); echo '</pre>';
+# pre_dump(); die();
+snippet pdd
+	echo '<pre>'; var_dump(${1}); echo '</pre>'; die(${0:});
+snippet vd
+	var_dump(${0});
+snippet dd
+	dd($${0});
+snippet vdd
+	var_dump(${1}); die(${0:});
+snippet pr
+	print_r(${0});
+snippet prs
+	print_r(${0}, 1);
+snippet vdf
+	error_log(print_r($${1:foo}, true), 3, '${2:/tmp/debug.log}');
+snippet http_redirect
+	header ("HTTP/1.1 301 Moved Permanently");
+	header ("Location: ".URL);
+	exit();
+snippet rett
+	return true;
+snippet retf
+	return false;
+
+# phpunit	
+snippet ase
+	$this->assertEquals(${1:expected}, ${2:actual});
+
+snippet asne
+	$this->assertNotEquals(${1:expected}, ${2:actual});
+
+snippet asf
+	$this->assertFalse(${1:Something});
+
+snippet ast
+	$this->assertTrue(${1:Something});
+
+snippet asfex
+	$this->assertFileExists(${1:path/to/file});
+
+snippet asfnex
+	$this->assertFileNotExists(${1:path/to/file});
+
+snippet ascon
+	$this->assertContains(${1:Search Value}, ${2:Array or Iterator});
+
+snippet ashk
+	$this->assertArrayHasKey(${1:key}, ${2:array});
+
+snippet asnhk
+	this->assertArrayNotHasKey(${1:value}, ${2:array});
+
+snippet ascha
+	$this->assertClassHasAttribute('${1:Attribute Name}', '${2:ClassName}');
+
+snippet asi
+	$this->assertInstanceOf(${1:expected}, ${2:actual});
+
+snippet tc
+	public function test${1:name_of_the_test}()
+	{
+		${0:code}
+	}
+
