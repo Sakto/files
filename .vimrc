@@ -24,6 +24,7 @@ Plugin 'tpope/vim-ragtag'
 Plugin 'moll/vim-bbye'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
+Plugin 'xsbeats/vim-blade'
 
 call vundle#end()            " required
 
@@ -108,6 +109,11 @@ set smartcase
 set hlsearch
 " Hit esc to turn search highlighting off
 nnoremap <esc> :noh<return><esc>
+
+" Edit snippets
+nmap <leader>es :UltiSnipsEdit<cr>
+" Add html indentation to blade syntax
+autocmd BufRead,BufNewFile *.blade.php  runtime! indent/html.vim
 
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
 set nobackup
