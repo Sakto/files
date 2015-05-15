@@ -36,6 +36,18 @@ class ${1} extends Controller {
 
 }
 endsnippet
+snippet lartest
+<?php
+
+class ${1}Test extends TestCase {
+
+	public function test${2}()
+	{
+		${0}
+	}
+
+}
+endsnippet
 snippet lartrait
 <?php namespace App\Traits;
 
@@ -110,14 +122,12 @@ function ${1}(${3})
 {
 	${0}
 }
-# method
 endsnippet
 snippet m
 ${1:public} function ${2:foo}()
 {
 	${0}
 }
-# Tertiary conditional
 endsnippet
 snippet =?:
 $${1:foo} = ${2:true} ? ${3:a} : ${0};

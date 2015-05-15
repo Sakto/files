@@ -110,6 +110,9 @@ set hlsearch
 " Hit esc to turn search highlighting off
 nnoremap <esc> :noh<return><esc>
 
+" Highlight current line
+:set cursorline
+
 " Edit snippets
 nmap <leader>es :UltiSnipsEdit<cr>
 " Add html indentation to blade syntax
