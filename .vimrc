@@ -25,11 +25,14 @@ Plugin 'moll/vim-bbye'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'xsbeats/vim-blade'
+Plugin 'altercation/vim-colors-solarized'
 
 call vundle#end()            " required
 
 syntax on
-colorscheme daniels
+set background=light
+" colorscheme daniels
+colorscheme solarized
 set nowrap
 set number
 
@@ -112,6 +115,8 @@ nnoremap <esc> :noh<return><esc>
 
 " Highlight current line
 :set cursorline
+" Highlight current column
+:set cursorcolumn
 
 " Edit snippets
 nmap <leader>es :UltiSnipsEdit<cr>

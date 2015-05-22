@@ -5,6 +5,7 @@
 127.0.1.1	sugar.crm
 127.0.1.1	suite.crm
 127.0.1.1	approvr.dev
+127.0.1.1	ebdb.dev
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
