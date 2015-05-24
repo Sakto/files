@@ -1,0 +1,58 @@
+sudo apt-get install apache2 mysql-server php5 php5-mysql php5-mcrypt php5-cli php5-imagick phpmyadmin
+
+sudo php5enmod mcrypt
+sudo a2enmod rewrite
+
+sudo apt-get install vim-gtk
+(if necessary install Pathogen and Vundle and run :PluginInstall)
+
+sudo apt-get install git
+
+sudo apt-get install exuberant-ctags
+
+Edit:
+/etc/apache2/apache2.conf
+	Change <Directory /var/www> to:
+<Directory /home/daniel/Web/www/>
+	AllowOverride All
+
+	Change <Directory /> to:
+<Directory />
+	#Options FollowSymLinks
+	AllowOverride All
+	Order deny,allow
+	Allow from all
+</Directory>
+
+Edit:
+/etc/mysql/my.cnf
+	datadir		= /home/daniel/Web/dbs
+
+sudo rm /etc/apache2/sites-available/000-default.conf
+sudo ln -s /home/daniel/Web/configfiles/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+sudo rm /etc/hosts
+sudo ln -s /home/daniel/Web/configfiles/hosts /etc/hosts
+
+sudo rm /etc/mysql/my.cnf
+sudo ln -s /home/daniel/Web/configfiles/my.cnf /etc/mysql/my.cnf
+
+sudo rm /etc/php5/apache2/php.ini
+sudo ln -s /home/daniel/Web/configfiles/php.ini /etc/php5/apache2/php.ini
+
+sudo service mysql restart
+sudo service apache2 restart
+
+sudo usermod -a -G daniel www-data
+
+sudo apt-get install nodejs npm
+
+// Install composer and make it available globally
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+
+sudo npm install -g grunt-cli
+sudo npm install -g bower
+
+sudo gem install sass
+
