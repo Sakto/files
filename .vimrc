@@ -26,13 +26,14 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'xsbeats/vim-blade'
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'morhetz/gruvbox'
 
 call vundle#end()            " required
 
 syntax on
-set background=light
+set background=dark
 " colorscheme daniels
-colorscheme solarized
+colorscheme gruvbox
 set nowrap
 set number
 
