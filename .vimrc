@@ -129,5 +129,7 @@ set nobackup
 set nowb
 set noswapfile
 
+command TODO :!grep -nriE --include \*.php --exclude-dir vendor 'TODO|FIXME' .
+
 
 
