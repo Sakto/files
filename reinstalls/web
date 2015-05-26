@@ -1,4 +1,4 @@
-sudo apt-get install apache2 mysql-server php5 php5-mysql php5-mcrypt php5-cli php5-imagick phpmyadmin
+sudo apt-get install apache2 mysql-server php5 php5-mysql php5-mcrypt php5-cli php5-imagick php5-gd phpmyadmin
 
 sudo php5enmod mcrypt
 sudo a2enmod rewrite
