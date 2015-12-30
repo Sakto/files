@@ -280,6 +280,11 @@ snippet div.
 	${0}
 </div>
 endsnippet
+snippet div.#
+<div class="${1}" id="${2}">
+	${0}
+</div>
+endsnippet
 snippet div#
 <div id="${1}">
 	${0}
@@ -553,8 +558,17 @@ endsnippet
 snippet input.
 <input class="${1}" type="${2:text/submit/hidden/button/image}" name="${3}" id="${4:$3}" value="${5}" />
 endsnippet
+snippet textarea
+<textarea name="${1}" id="${2}">${3}</textarea>
+endsnippet
+snippet textarea.
+<textarea name="${1}" class="${2}" id="${3}">${4}</textarea>
+endsnippet
 snippet input:text
 <input type="text" name="${1}" id="${2:$1}" value="${3}" />
+endsnippet
+snippet input:text.
+<input type="text" name="${1}" id="${2:$1}" value="${3}" class="${4}" />
 endsnippet
 snippet input:submit
 <input type="submit" name="${1}" id="${2:$1}" value="${3}" />
@@ -629,17 +643,20 @@ snippet keygen
 <keygen>${0}</keygen>
 endsnippet
 snippet label
-<label for="${0:$1}">${1}</label>
+<label for="${1}">${2}</label>
 endsnippet
 snippet label:i
-<label for="${2:$1}">${1}</label>
-<input type="${3:text/submit/hidden/button}" name="${4:$2}" id="${5:$2}" value="${6}" />
+<label for="${2}">${1}</label>
+<input type="${3:text/submit/hidden/button}" name="${4:$2}" id="${5:$2}" value="${6}" class="${7}" />
 endsnippet
 snippet label:s
-<label for="${2:$1}">${1}</label>
-<select name="${3:$2}" id="${4:$2}">
-	<option value="${5}">${0:$5}</option>
+<label for="${2}">${1}</label>
+<select name="${3:$2}" id="${4:$2}" class="${5}" value="${6}">
 </select>
+endsnippet
+snippet label:t
+<label for="${2}">${1}</label>
+<textarea name="${3:$2}" id="${4:$2}" class="${5}">${6}</textarea>
 endsnippet
 snippet legend
 <legend>${0}</legend>
@@ -907,7 +924,7 @@ snippet select
 </select>
 endsnippet
 snippet select.
-<select name="${1}" id="${2:$1}" class="${3}>
+<select name="${1}" id="${2:$1}" class="${3}">
 	${0}
 </select>
 endsnippet
@@ -1059,4 +1076,11 @@ snippet video
 endsnippet
 snippet wbr
 <wbr />
+endsnippet
+snippet glyph
+glyphicon glyphicon-
+endsnippet
+# rails tags.. Doesn't work in rails.snippets
+snippet <%
+<%= ${0} %>
 endsnippet

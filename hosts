@@ -7,6 +7,13 @@
 127.0.1.1	suite.crm
 127.0.1.1	approvr.dev
 127.0.1.1	twitterthing.dev
+127.0.1.1	redditstuff.dev
+127.0.1.1	marktilbord.dev
+127.0.1.1	progress.dev
+127.0.1.1	homebrew.dev
+127.0.1.1	sjaellands-ejendomsservice.dev
+127.0.1.1	hearthstone.dev
+
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback

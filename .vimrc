@@ -4,7 +4,8 @@ execute pathogen#infect()
 " Vundle
 " https://github.com/gmarik/Vundle.vim
 set nocompatible
-filetype off
+filetype on
+autocmd FileType php set keywordprg=pman
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
@@ -27,6 +28,7 @@ Plugin 'honza/vim-snippets'
 Plugin 'xsbeats/vim-blade'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
+Plugin 'Valloric/YouCompleteMe'
 
 call vundle#end()            " required
 
@@ -55,7 +57,7 @@ set cindent "Smart indent
 " Setting Space to leader
 let mapleader = "\<Space>"
 
-let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger="<c-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
@@ -71,10 +73,13 @@ nmap <Leader>p "+p
 nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
+vmap <C-d> <C-b>
 
 :imap jj <Esc>
 
 nnoremap t <C-]>
+nnoremap <Leader>t :tn<CR>
+:set tags=./tags;
 
 :command WQ wq
 :command Wq wq
@@ -90,7 +95,6 @@ noremap <Right> <nop>
 " Vim-bbye
 :nnoremap <leader>x :Bdelete<CR>
 
-:set tags=./tags;
 
 nmap <C-p> :CtrlP
 nmap <C-b> :CtrlPBuffer<CR>
@@ -119,10 +123,13 @@ nnoremap <esc> :noh<return><esc>
 " Highlight current column
 :set cursorcolumn
 
-" Edit snippets
-nmap <leader>es :UltiSnipsEdit<cr>
+" Edit .vimrc
+nmap <leader>ev :e /home/daniel/.vimrc<cr>
 " Add html indentation to blade syntax
 autocmd BufRead,BufNewFile *.blade.php  runtime! indent/html.vim
+autocmd BufRead,BufNewFile *.html.erb  runtime! indent/html.vim
+au BufRead *.php set ft=php.html
+au BufNewFile *.php set ft=php.html
 
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
 set nobackup
@@ -131,5 +138,8 @@ set noswapfile
 
 command TODO :!grep -nriE --include \*.php --exclude-dir vendor 'TODO|FIXME' .
 
+" Fix broken arrow keys in insert mode
+:set term=builtin_ansi
 
+nmap <F8> :TagbarToggle<CR> 
 
