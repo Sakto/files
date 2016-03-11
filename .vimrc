@@ -28,16 +28,18 @@ Plugin 'honza/vim-snippets'
 Plugin 'xsbeats/vim-blade'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
-Plugin 'Valloric/YouCompleteMe'
 
 call vundle#end()            " required
 
 syntax on
 set background=dark
-" colorscheme daniels
 colorscheme gruvbox
 set nowrap
 set number
+set noexpandtab
+set smarttab
+set autoindent
+set cindent "Smart indent
 
 autocmd vimenter * NERDTree
 " move the cursor to the file
@@ -45,19 +47,13 @@ autocmd VimEnter * NERDTree | wincmd p
 let g:NERDTreeWinPos = "right"
 let NERDTreeShowHidden=1
 
-set noexpandtab
-set smarttab
-set autoindent
-set cindent "Smart indent
-"set wrap "Wrap lines
-
 " Indentation with tabs
 :set noet ci pi sts=0 sw=4 ts=4
 
 " Setting Space to leader
 let mapleader = "\<Space>"
 
-let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
@@ -94,7 +90,8 @@ noremap <Right> <nop>
 
 " Vim-bbye
 :nnoremap <leader>x :Bdelete<CR>
-
+" Delete all buffers
+:nnoremap <leader>X :bd *<C-a><CR>
 
 nmap <C-p> :CtrlP
 nmap <C-b> :CtrlPBuffer<CR>
@@ -124,7 +121,7 @@ nnoremap <esc> :noh<return><esc>
 :set cursorcolumn
 
 " Edit .vimrc
-nmap <leader>ev :e /home/daniel/.vimrc<cr>
+" nmap <leader>ev :e /home/daniel/.vimrc<cr>
 " Add html indentation to blade syntax
 autocmd BufRead,BufNewFile *.blade.php  runtime! indent/html.vim
 autocmd BufRead,BufNewFile *.html.erb  runtime! indent/html.vim
