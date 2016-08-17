@@ -28,6 +28,7 @@ Plugin 'honza/vim-snippets'
 Plugin 'xsbeats/vim-blade'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
+Plugin 'easymotion/vim-easymotion'
 
 call vundle#end()            " required
 
@@ -121,7 +122,7 @@ nnoremap <esc> :noh<return><esc>
 :set cursorcolumn
 
 " Edit .vimrc
-" nmap <leader>ev :e /home/daniel/.vimrc<cr>
+nmap <leader>v :e /home/daniel/Web/configfiles/.vimrc<cr>
 " Add html indentation to blade syntax
 autocmd BufRead,BufNewFile *.blade.php  runtime! indent/html.vim
 autocmd BufRead,BufNewFile *.html.erb  runtime! indent/html.vim
@@ -139,4 +140,10 @@ command TODO :!grep -nriE --include \*.php --exclude-dir vendor 'TODO|FIXME' .
 :set term=builtin_ansi
 
 nmap <F8> :TagbarToggle<CR> 
+
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+
+" Relative linenumbers
+:set nu
+:set relativenumber
 

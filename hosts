@@ -1,19 +1,13 @@
 127.0.0.1	localhost
 127.0.1.1	daniel-desktop
 127.0.1.1	morningpages.dev
-127.0.1.1	lokaloko.dev
-188.166.65.193	lokaloko.server
-127.0.1.1	sugar.crm
-127.0.1.1	suite.crm
-127.0.1.1	approvr.dev
-127.0.1.1	twitterthing.dev
-127.0.1.1	redditstuff.dev
+127.0.1.1	cms.dev
 127.0.1.1	marktilbord.dev
-127.0.1.1	progress.dev
-127.0.1.1	homebrew.dev
-127.0.1.1	sjaellands-ejendomsservice.dev
-127.0.1.1	hearthstone.dev
-
+127.0.1.1	nord.dev
+127.0.1.1	kvalitetstolk.dev
+127.0.1.1	wood2wood.dev
+127.0.1.1	juice.dev
+127.0.1.1	valentin.dev
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
@@ -21,3 +15,12 @@ fe00::0 ip6-localnet
 ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
+
+## vagrant-hostmanager-start id: cc55f13b-5dbd-4fb8-857e-70966713200b
+172.22.22.22	projectname.local
+172.22.22.22	www.projectname.local
+## vagrant-hostmanager-end
+
+127.0.1.1 cthulhu
+
+127.0.0.1	thisisatest.dev

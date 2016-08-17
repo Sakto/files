@@ -4,7 +4,6 @@ snippet //
 endsnippet
 snippet doctype
 <!DOCTYPE HTML>
-# Attributes
 endsnippet
 snippet attr
 ${1:attribute}="${0:property}"
@@ -491,7 +490,7 @@ snippet hr
 <hr />
 endsnippet
 snippet html
-<html>
+<html lang="${1}">
 ${0}
 </html>
 endsnippet
@@ -644,6 +643,9 @@ snippet keygen
 endsnippet
 snippet label
 <label for="${1}">${2}</label>
+endsnippet
+snippet label.
+<label for="${1}" class="${2}">${3}</label>
 endsnippet
 snippet label:i
 <label for="${2}">${1}</label>
@@ -893,7 +895,7 @@ snippet script
 </script>
 endsnippet
 snippet scripts
-<script src="${0}.js"></script>
+<script src="${0}"></script>
 endsnippet
 snippet scriptt
 <script type="${1}" id="${2}">
@@ -901,7 +903,7 @@ snippet scriptt
 </script>
 endsnippet
 snippet scriptsrc
-<script src="${0}.js" type="text/javascript" charset="utf-8"></script>
+<script src="${0}" type="text/javascript" charset="utf-8"></script>
 endsnippet
 snippet section
 <section>
@@ -1083,4 +1085,10 @@ endsnippet
 # rails tags.. Doesn't work in rails.snippets
 snippet <%
 <%= ${0} %>
+endsnippet
+# WORDPRESS
+snippet wploop
+<?php if(have_posts()): while(have_posts()): the_post(); ?>
+	${0}
+<?php endwhile; endif; ?>
 endsnippet
