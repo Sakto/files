@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Check if commandline argument was given
+if [ -z "$1" ]; then
+	echo "No projectname given. It's \"dev [projectname]\""
+	exit
+fi
+
+PROJECT_NAME=$1
+WWW_DIR=/home/$USERNAME/Web/www
+PROJECT_DIR=$WWW_DIR/$PROJECT_NAME
+PROJECT_URL=http://$PROJECT_NAME".dev"
+
+WID=$(xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)"| awk '{print $5}')
+xdotool windowfocus $WID
+xdotool key ctrl+shift+t
+wmctrl -i -a $WID
+
+sleep 1;
+xdotool type --delay 1 --clearmodifiers "cd $PROJECT_DIR";
+xdotool key Return;
+
+nemo $PROJECT_DIR
+xdg-open $PROJECT_URL
+cd /$PROJECT_DIR
+gvim app/Http/Controllers/Controller.php
+#gnome-terminal --title="$PROJECT_NAME" $PROJECT_DIR
+
+
+npm start
+

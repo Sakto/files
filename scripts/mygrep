@@ -1,0 +1,89 @@
+#!/bin/bash
+
+# Check if commandline argument was given
+if [ -z "$1" ]; then
+	echo "No argument given."
+	exit
+fi
+
+dir=$PWD
+includes='--include=*.php'
+invalidarguments=false
+args="rnFI"
+counter=0
+
+grepstring="-"
+
+function parsefiletypes {
+	filetypes=$1
+	if [[ $filetypes == *","* ]] ; then
+		filesarr=(${filetypes//,/ })
+		for f in "${filesarr[@]}"
+		do
+			includes=$includes"--include=*.$f "
+		done
+		includes=${includes::-1}
+	else
+		includes="--include=*.$filetypes"
+	fi
+}
+
+usage()
+{
+cat << EOF
+Available args are:
+-h
+	Shows this list
+-t [filetypes]
+	Which [filetypes] to search in. For example "-t php" or "-t js,php,rb"
+-i
+	Search will be case-insensitive
+EOF
+}
+
+while getopts ':t:ih' flag; do
+	case $flag in
+		t)
+			counter=$(($counter+2))
+			parsefiletypes ${OPTARG}
+			;;
+		i)
+			counter=$(($counter+1))
+			args=$args"i"
+			;;
+		h)
+			usage
+			exit
+			;;
+		\?)
+			echo "Invalid option: -${OPTARG}" >&2
+			invalidarguments=true
+			;;
+		:)
+			echo "Option -${OPTARG} requires an argument. try -h for help" >&2
+			invalidarguments=true
+	esac
+done
+
+if [ $invalidarguments = true ] ; then
+	usage
+	exit
+fi
+
+searchterm=''
+counter=$(($counter+1))
+if [ -z "${!counter}" ] ; then
+	echo "No searchterm given"
+	usage
+	exit
+else
+	searchterm=${!counter}
+fi
+
+counter=$(($counter+1))
+if [ "${!counter}" ] ; then
+	dir=$dir/${!counter}
+fi
+
+grep -$args "$searchterm" --color $includes $dir
+

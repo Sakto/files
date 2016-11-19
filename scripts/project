@@ -1,0 +1,203 @@
+#!/bin/bash
+
+# Check if commandline argument was given
+if [ -z "$1" ]; then
+	echo "No option given. It's \"new\" or \"remove\" [projectname]"
+	exit
+fi
+
+# Make sure we are root
+if [ "$(id -u)" != "0" ]; then
+	echo "ERROR: This script must run as root"
+	exit
+fi
+
+# Check if commandline argument was given
+if [ -z "$2" ]; then
+	echo "No projectname given. It's: \"project [new/remove] [projectname]\""
+	exit
+fi
+
+# VARIABLES
+USERNAME=daniel
+PROJECT_NAME=$2
+WWW_DIR=/home/$USERNAME/Web/www
+PROJECT_DIR=$WWW_DIR/$PROJECT_NAME
+NEW_URL=http://$PROJECT_NAME.dev
+HOSTS_FILE=/home/$USERNAME/Web/configfiles/hosts
+VIRTUAL_HOSTS_FILE=/home/$USERNAME/Web/configfiles/000-default.conf
+DB_USER=root
+DB_PASSWORD=daniel2912
+BIN_DIR=$WWW_DIR/projectbin
+
+# FUNCTIONS
+function runasuser {
+	sudo -u ${USERNAME} -H sh -c "cd $PROJECT_DIR; $1"
+}
+
+function announce {
+	echo "-- $1 --"
+	sleep 1
+}
+
+if [ $1 == "new" ]; then
+
+	announce "CREATING NEW LARAVEL PROJECT AT $WWW_DIR/$PROJECT_NAME"
+	sudo -u ${USERNAME} -H sh -c "cd $WWW_DIR; /home/$USERNAME/.composer/vendor/bin/laravel new $PROJECT_NAME"
+
+	cd $PROJECT_DIR
+
+	announce "RUNNING COMPOSER INSTALL"
+	composer install
+
+	announce "RUNNING NPM INSTALL"
+	npm install
+	npm uninstall gulp --save
+	npm install grunt --save
+	npm install grunt-contrib-watch --save
+	npm install grunt-contrib-sass --save
+
+	announce "COMPOSER"
+	composer require "intervention/image"
+
+	announce "MOVING .env"
+	mv .env.example .env
+
+	announce "ADDING VIRTUALHOST TO APACHE"
+	echo "" >> $VIRTUAL_HOSTS_FILE
+	echo "<VirtualHost *:80>" >> $VIRTUAL_HOSTS_FILE
+	echo "	ServerName www.${PROJECT_NAME}.dev" >> $VIRTUAL_HOSTS_FILE
+	echo "	ServerAlias ${PROJECT_NAME}.dev" >> $VIRTUAL_HOSTS_FILE
+	echo "	DocumentRoot ${PROJECT_DIR}/public" >> $VIRTUAL_HOSTS_FILE
+	echo "</VirtualHost>" >> $VIRTUAL_HOSTS_FILE
+
+	announce "RESTARTING APACHE"
+	service apache2 restart
+
+	announce "ADDING $PROJECT_NAME.dev TO HOSTS FILE"
+	echo "" >> $HOSTS_FILE
+	echo "127.0.0.1	${PROJECT_NAME}.dev" >> $HOSTS_FILE
+
+	announce "SETTING UP BOWER"
+	cp $BIN_DIR/.bowerrc .bowerrc
+	cp $BIN_DIR/bower.json bower.json
+	set -i  "s/projectbin/${PROJECT_NAME}/g" bower.json
+
+	announce "ADDING STUFF TO .gitignore"
+	echo "" >> .gitignore
+	echo "/bower_components" >> .gitignore
+	echo "/public/media/components" >> .gitignore
+	echo "/public/uploads" >> .gitignore
+	echo "tags" >> .gitignore
+
+	announce "RUNNING CTAGS"
+	ctags -R .
+
+	announce "REMOVING REDUNDANT FILES AND ADDING readme.md"
+	rm gulpfile.js
+	rm readme.md
+	touch readme.md
+	echo "# ${PROJECT_NAME}" >> readme.md
+
+	announce "STARTING GIT REPO"
+	runasuser "git init"
+
+	announce "CREATING DATABASE $PROJECT_NAME"
+	mysql -u$DB_USER -p$DB_PASSWORD -e "CREATE DATABASE $PROJECT_NAME"
+
+	announce "RUNNING composer dump-autoload"
+	composer dump-autoload
+
+	announce "GENERATING PROJECT KEY"
+	php artisan key:generate
+
+	announce "UPDATING .env"
+	sed -i "5s/.*/APP_URL=http:\/\/${PROJECT_NAME}.dev/" .env
+	sed -i "10s/.*/DB_DATABASE=${PROJECT_NAME}/" .env
+	sed -i "11s/.*/DB_USERNAME=${DB_USER}/" .env
+	sed -i "12s/.*/DB_PASSWORD=${DB_PASSWORD}/" .env
+
+	announce "SETTING UP PROJECT FILES"
+	mkdir public/uploads
+	mkdir public/media
+	mkdir public/media/css
+	mkdir public/media/imgs
+	mkdir public/media/fonts
+	mkdir public/media/components
+	mkdir public/media/js
+	touch public/media/js/global.js
+	mkdir public/media/sass
+	touch public/media/sass/global.scss
+
+	rm app/User.php
+	cp -R $BIN_DIR/app/Http/Models app/Http/Models
+
+	cp $BIN_DIR/app/Http/Controllers/Auth/UserAuthController.php app/Http/Controllers/Auth/UserAuthController.php
+	cp $BIN_DIR/app/Http/Controllers/ProjectController.php app/Http/Controllers/ProjectController.php
+	cp $BIN_DIR/app/Http/Controllers/PageController.php app/Http/Controllers/PageController.php
+	cp $BIN_DIR/app/Http/routes.php app/Http/routes.php
+	cp $BIN_DIR/config/app.php config/app.php
+	cp $BIN_DIR/config/auth.php config/auth.php
+	cp $BIN_DIR/database/seeds/DatabaseSeeder.php database/seeds/DatabaseSeeder.php
+	rm resources/views/welcome.blade.php
+	cp $BIN_DIR/resources/views/app.blade.php resources/views/app.blade.php
+	cp $BIN_DIR/app/Http/Kernel.php app/Http/Kernel.php
+	cp $BIN_DIR/app/Http/Middleware/AuthenticateAdmin.php app/Http/AuthenticateAdmin.php
+	cp $BIN_DIR/app/Providers/BladeProvider.php app/Providers/BladeProvider.php
+	cp $BIN_DIR/app/Providers/ValidatorExtenderProvider.php app/Providers/ValidatorExtenderProvider.php
+	cp $BIN_DIR/app/Providers/ImageProvider.php app/Providers/ImageProvider.php	
+
+	cp -R $BIN_DIR/resources/views/pages resources/views/pages
+	rm -rf resources/views/auth
+	cp -R $BIN_DIR/resources/views/auth resources/views/auth
+	cp -R $BIN_DIR/app/Traits app/Traits
+	cp -R $BIN_DIR/app/Helpers app/Helpers
+	cp -R $BIN_DIR/app/Services app/Services
+	rm -rf database/migrations
+	cp -R $BIN_DIR/database/migrations database/migrations
+
+	announce "RUNNING MIGRATIONS"
+	php artisan migrate
+
+	announce "UPDATING PROJECT DIR PERMISSIONS"
+	cd ..
+	find $PROJECT_NAME -type d -exec chmod 755 {} \;
+	find $PROJECT_NAME -type f -exec chmod 644 {} \;
+	chmod -R 777 $PROJECT_NAME/storage
+	chmod -R 777 $PROJECT_NAME/bootstrap/cache
+	chown -R $USERNAME:www-data $PROJECT_NAME
+
+	announce "AND HERE WE GO!"
+	runasuser "nemo $PROJECT_DIR"
+	runasuser "gnome-terminal $PROJECT_DIR"
+	runasuser "gvim .env readme.md app/Http/routes.php"
+	runasuser "xdg-open http://localhost/phpmyadmin"
+	runasuser "xdg-open $NEW_URL"
+
+elif [ $1 == "remove" ]; then
+
+	announce "REMOVING VIRTUALHOST ENTRY"
+	VHOST_LINE_NUMBER=`awk "/ServerName www.$PROJECT_NAME.dev/{ print NR; exit }" $VIRTUAL_HOSTS_FILE`
+	VHOST_START=$((  $VHOST_LINE_NUMBER-2 ))
+	VHOST_END=$(( $VHOST_START+5 ))
+	sed -i "${VHOST_START},${VHOST_END}d" ${VIRTUAL_HOSTS_FILE}
+
+	announce "REMOVING ENTRY IN HOSTS FILE"
+	HOSTS_LINE=`awk "/$PROJECT_NAME.dev/{ print NR; exit; }" $HOSTS_FILE`
+	HOSTS_LINE_START=$(( $HOSTS_LINE-1 ))
+	sed -i "${HOSTS_LINE_START},${HOSTS_LINE}d" ${HOSTS_FILE}
+
+	announce "DROPPING DB"
+	mysql -u$DB_USER -p$DB_PASSWORD -e "DROP DATABASE $PROJECT_NAME"
+
+	announce "DELETING PROJECT DIR"
+	rm -rf $PROJECT_DIR
+
+	announce "Done!"
+
+else
+
+	echo "No valid option given. It's \"project [new/remove] [projectname]\""
+	exit
+
+fi
