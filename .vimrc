@@ -1,36 +1,42 @@
+set nocp
 " Pathogen
-execute pathogen#infect()
+" execute pathogen#infect()
 
 " Vundle
 " https://github.com/gmarik/Vundle.vim
 set nocompatible
 filetype on
+filetype plugin indent on
 autocmd FileType php set keywordprg=pman
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/vimfiles/bundle/Vundle.vim
+
 call vundle#begin()
 
 " list plugins here
 Plugin 'gmarik/Vundle.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'fatih/vim-go'
-Plugin 'Raimondi/delimitMate'
-Plugin 'kien/ctrlp.vim'
-Plugin 'ivalkeen/nerdtree-execute'
-Plugin 'bling/vim-airline'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-ragtag'
-Plugin 'moll/vim-bbye'
+Plugin 'scrooloose/syntastic' " Syntax checking
+Plugin 'Raimondi/delimitMate' " Autocomplete for parenthesis etc.
+Plugin 'kien/ctrlp.vim' " Awesomeness
+Plugin 'bling/vim-airline' " Bottom statusbar
+Plugin 'tpope/vim-repeat' " Adds . repeats to plugins (usually just limit to native commands)
+Plugin 'tpope/vim-surround' " Commands to surround words/paragraphs/etc
+Plugin 'tpope/vim-ragtag' " A set of mappings for HTML, XML, PHP, ASP, eRuby, JSP, and more | I have no idea what this plugin does..
+Plugin 'moll/vim-bbye' " Closing buffers - commands
 Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
+Plugin 'honza/vim-snippets' " More snippets for ultisnips
 Plugin 'xsbeats/vim-blade'
-Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
-Plugin 'easymotion/vim-easymotion'
+Plugin 'scrooloose/nerdtree'
+Plugin 'majutsushi/tagbar' " F8 to see methods and vars in file
 
 call vundle#end()            " required
+
+" Windows
+" set shell=cmd
+let g:NERDTreeCopyCmd='cp -r'
+
+" Select what has just been pasted
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
 syntax on
 set background=dark
@@ -42,8 +48,13 @@ set smarttab
 set autoindent
 set cindent "Smart indent
 
-autocmd vimenter * NERDTree
-" move the cursor to the file
+" Ctrl-P for tags
+nnoremap <Leader>, :CtrlPTag<cr>
+
+" Making backspace work on windows
+set backspace=2
+set backspace=indent,eol,start
+
 autocmd VimEnter * NERDTree | wincmd p
 let g:NERDTreeWinPos = "right"
 let NERDTreeShowHidden=1
@@ -54,9 +65,10 @@ let NERDTreeShowHidden=1
 " Setting Space to leader
 let mapleader = "\<Space>"
 
-let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger = "<Tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+"let g:UltiSnipsSnippetsDirectories=[$HOME . "/vimfiles/snips", $HOME . "/vimfiles/bundle/vim-snippets/snippets", $HOME . "/vimfiles/snips"]
 
 " Save with Space-w
 nnoremap <leader>w :w<CR>
@@ -72,16 +84,11 @@ vmap <Leader>p "+p
 vmap <Leader>P "+P
 vmap <C-d> <C-b>
 
-:imap jj <Esc>
-
 nnoremap t <C-]>
 nnoremap <Leader>t :tn<CR>
+" Jump to tag definition in new vertical split
+nnoremap <C-w>t :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("tag ". word)<cr>
 :set tags=./tags;
-
-:command WQ wq
-:command Wq wq
-:command W w
-:command Q q
 
 " Disabling the arrow keys
 noremap <Up> <nop>
@@ -91,8 +98,8 @@ noremap <Right> <nop>
 
 " Vim-bbye
 :nnoremap <leader>x :Bdelete<CR>
-" Delete all buffers
-:nnoremap <leader>X :bd *<C-a><CR>
+" Delete all buffers and reopen NERDTree
+:nnoremap <leader>r :%bd <Bar> NERDTree<CR>
 
 nmap <C-p> :CtrlP
 nmap <C-b> :CtrlPBuffer<CR>
@@ -111,6 +118,8 @@ set backupdir^=$HOME/tmp//
 set ignorecase
 " When searching try to be smart about cases 
 set smartcase	
+" Incremental search
+set incsearch
 " Highlight search results
 set hlsearch
 " Hit esc to turn search highlighting off
@@ -123,27 +132,27 @@ nnoremap <esc> :noh<return><esc>
 
 " Edit .vimrc
 nmap <leader>v :e /home/daniel/Web/configfiles/.vimrc<cr>
-" Add html indentation to blade syntax
-autocmd BufRead,BufNewFile *.blade.php  runtime! indent/html.vim
-autocmd BufRead,BufNewFile *.html.erb  runtime! indent/html.vim
-au BufRead *.php set ft=php.html
-au BufNewFile *.php set ft=php.html
+
+" Add html indentation to template files
+autocmd BufRead,BufNewFile *.blade.php setlocal ft=html syn=php
 
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
 set nobackup
 set nowb
 set noswapfile
 
-command TODO :!grep -nriE --include \*.php --exclude-dir vendor 'TODO|FIXME' .
+"command TODO :!grep -nriE --include \*.php --exclude-dir vendor 'TODO|FIXME' .
 
 " Fix broken arrow keys in insert mode
-:set term=builtin_ansi
+" :set term=builtin_ansi
 
 nmap <F8> :TagbarToggle<CR> 
 
-nmap <Leader>f <Plug>(easymotion-overwin-f)
-
-" Relative linenumbers
+" Show linenumbers
 :set nu
+" Relative linenumbers
 :set relativenumber
 
+set encoding=utf-8
+
+set guifont=Consolas:h12
